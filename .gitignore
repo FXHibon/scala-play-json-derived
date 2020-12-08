@@ -5,4 +5,4 @@
 /target/scala-2.13/test-classes/
 .bsp
 .idea
-./project/project/
+project/project
