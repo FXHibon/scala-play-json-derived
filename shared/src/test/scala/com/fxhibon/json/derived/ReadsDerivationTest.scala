@@ -10,8 +10,8 @@ class ReadsDerivationTest extends munit.FunSuite {
     val correctPayload = """{"left": 123, "right": 321}"""
     val incorrectPayload = """{"left": "qwe"}"""
 
-    val customDerivedReads: Reads[Leaf[Int]] = gen
-    val playDerivedReads: Reads[Leaf[Int]] = Json.reads
+    val customDerivedReads: Reads[Leaf[Int]] = gen[Leaf[Int]]
+    val playDerivedReads: Reads[Leaf[Int]] = Json.reads[Leaf[Int]]
 
     val successResultWithCustomReads =
       customDerivedReads.reads(Json.parse(correctPayload))
@@ -41,7 +41,7 @@ class ReadsDerivationTest extends munit.FunSuite {
       )
     )
 
-    val customDerivedReads: Reads[DoubleTree[Int]] = gen
+    val customDerivedReads: Reads[DoubleTree[Int]] = gen[DoubleTree[Int]]
 
     val successResultWithCustomReads = trees.map(_.as(customDerivedReads))
 
@@ -80,7 +80,7 @@ class ReadsDerivationTest extends munit.FunSuite {
     implicit val typeNameReads: TypeNameReads = new TypeNameReads {
       override val reads: Typeclass[String] = (JsPath \ "custom_typename").read[String]
     }
-    val customDerivedReads: Reads[DoubleTree[Int]] = gen
+    val customDerivedReads: Reads[DoubleTree[Int]] = gen[DoubleTree[Int]]
 
     val result = customDerivedReads.reads(Json.parse("""{"custom_typename": "Leaf", "left": 123, "right": 321}"""))
 
