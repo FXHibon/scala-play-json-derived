@@ -2,6 +2,7 @@ package com.fxhibon.json.derived
 
 import play.api.libs.json.{JsError, JsPath, JsValue, Json, Reads}
 import ReadsDerivation._
+import com.fxhibon.json.derived.config.{PayloadPath, TypeNameReads}
 
 class ReadsDerivationTest extends munit.FunSuite {
 
@@ -10,7 +11,7 @@ class ReadsDerivationTest extends munit.FunSuite {
     val correctPayload = """{"left": 123, "right": 321}"""
     val incorrectPayload = """{"left": "qwe"}"""
 
-    val customDerivedReads: Reads[Leaf[Int]] = gen[Leaf[Int]]
+    val customDerivedReads: Reads[Leaf[Int]] = deriveReads[Leaf[Int]]
     val playDerivedReads: Reads[Leaf[Int]] = Json.reads[Leaf[Int]]
 
     val successResultWithCustomReads =
@@ -27,8 +28,8 @@ class ReadsDerivationTest extends munit.FunSuite {
     assertEquals(successResultWithCustomReads, successResultWithPlayReads)
 
     assertEquals(
-      failedResultWithCustomReads.asEither.left.get.toSet,
-      failedResultWithPlayReads.asEither.left.get.toSet
+      failedResultWithCustomReads.asEither.swap.getOrElse(fail("reads should have failed")).toSet,
+      failedResultWithPlayReads.asEither.swap.getOrElse(fail("reads should have failed")).toSet
     )
   }
 
@@ -41,7 +42,7 @@ class ReadsDerivationTest extends munit.FunSuite {
       )
     )
 
-    val customDerivedReads: Reads[DoubleTree[Int]] = gen[DoubleTree[Int]]
+    val customDerivedReads: Reads[DoubleTree[Int]] = deriveReads[DoubleTree[Int]]
 
     val successResultWithCustomReads = trees.map(_.as(customDerivedReads))
 
@@ -77,13 +78,25 @@ class ReadsDerivationTest extends munit.FunSuite {
   }
 
   test("derive sealed trait with custom type name") {
-    implicit val typeNameReads: TypeNameReads = new TypeNameReads {
-      override val reads: Typeclass[String] = (JsPath \ "custom_typename").read[String]
-    }
-    val customDerivedReads: Reads[DoubleTree[Int]] = gen[DoubleTree[Int]]
+    implicit val typeNameReads: TypeNameReads = TypeNameReads((JsPath \ "custom_typename").read[String])
+    val customDerivedReads: Reads[DoubleTree[Int]] = deriveReads[DoubleTree[Int]]
 
     val result = customDerivedReads.reads(Json.parse("""{"custom_typename": "Leaf", "left": 123, "right": 321}"""))
 
     assertEquals(result.get, Leaf(left = 123, right = 321))
+  }
+
+  test("derive sealed trait with custom payload path") {
+    implicit val payloadPath: PayloadPath = PayloadPath(JsPath \ "data")
+    val customDerivedReads: Reads[DoubleTree[Int]] = deriveReads[DoubleTree[Int]]
+
+    val result = customDerivedReads.reads(Json.parse("""{"type": "Leaf", "data": {"left": 123, "right": 321}}"""))
+    val errorResult = customDerivedReads.reads(Json.parse("""{"type": "Leaf", "left": 123, "right": 321}"""))
+
+    assertEquals(result.get, Leaf(left = 123, right = 321))
+    assertNoDiff(
+      JsError.toJson(errorResult.asInstanceOf[JsError]).toString,
+      """{"obj.data":[{"msg":["error.path.missing"],"args":[]}]}"""
+    )
   }
 }

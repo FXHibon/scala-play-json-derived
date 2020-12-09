@@ -1,6 +1,8 @@
 package com.fxhibon.json.derived
 
+import com.fxhibon.json.derived.config.{PayloadPath, TypeNameReads}
 import magnolia._
+import play.api.libs.json.JsValue.jsValueToJsLookup
 import play.api.libs.json._
 
 import scala.language.experimental.macros
@@ -24,12 +26,16 @@ object ReadsDerivation {
 
   def dispatch[T](
       ctx: SealedTrait[Reads, T]
-  )(implicit typeNameReads: TypeNameReads = TypeNameReads.defaultTypeNameReads): Reads[T] =
+  )(implicit
+      typeNameReads: TypeNameReads = TypeNameReads.defaultTypeNameReads,
+      payloadPath: PayloadPath = PayloadPath.defaultPayloadPath
+  ): Reads[T] =
     (value: JsValue) => {
       typeNameReads.reads
         .flatMap { typeName =>
           ctx.subtypes.find(_.typeName.short == typeName) match {
-            case Some(subtype) => Reads[T](_ => subtype.typeclass.reads(value))
+            case Some(subtype) =>
+              Reads[T](_ => payloadPath.path.read(subtype.typeclass).reads(value))
             case None =>
               Reads[T](_ => JsError("error.invalid.typename"))
           }
@@ -37,6 +43,6 @@ object ReadsDerivation {
         .reads(value)
     }
 
-  implicit def gen[T]: Reads[T] = macro Magnolia.gen[T]
+  implicit def deriveReads[T]: Reads[T] = macro Magnolia.gen[T]
 
 }

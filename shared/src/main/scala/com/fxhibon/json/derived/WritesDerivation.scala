@@ -1,5 +1,6 @@
 package com.fxhibon.json.derived
 
+import com.fxhibon.json.derived.config.{PayloadPath, TypeNameWrites}
 import magnolia._
 import play.api.libs.json._
 
@@ -22,14 +23,18 @@ object WritesDerivation {
 
   def dispatch[T](
       ctx: SealedTrait[Writes, T]
-  )(implicit typeNameWrites: TypeNameWrites = TypeNameWrites.defaultTypeNameWrites): Writes[T] =
+  )(implicit
+      typeNameWrites: TypeNameWrites = TypeNameWrites.defaultTypeNameWrites,
+      payloadPath: PayloadPath = PayloadPath.defaultPayloadPath
+  ): Writes[T] =
     (t: T) => {
       ctx.dispatch(t) { subtype =>
-        typeNameWrites.writes.writes(subtype.typeName.short) ++ subtype.typeclass
+        typeNameWrites.writes.writes(subtype.typeName.short) ++ payloadPath.path
+          .write(subtype.typeclass)
           .writes(subtype.cast(t))
           .as[JsObject]
       }
     }
 
-  implicit def gen[T]: Writes[T] = macro Magnolia.gen[T]
+  implicit def deriveWrites[T]: Writes[T] = macro Magnolia.gen[T]
 }

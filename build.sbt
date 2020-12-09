@@ -6,6 +6,8 @@ lazy val root = project
     `play-json-derived-play-29`
   )
 
+val scala212 = "2.12.12"
+val scala213 = "2.13.4"
 val sharedSettings = Seq(
   organization := "com.fxhibon",
   version := {
@@ -14,10 +16,19 @@ val sharedSettings = Seq(
       case None => "%s-SNAPSHOT".format(git.gitCurrentBranch.value)
     }
   },
-  scalaVersion := "2.13.4",
+  scalaVersion := scala213,
+  crossScalaVersions := Seq(scala212, scala213),
   libraryDependencies += "com.propensive" %% "magnolia" % "0.17.0",
   libraryDependencies += "org.scalameta"  %% "munit"    % "0.7.19" % Test,
-  testFrameworks += new TestFramework("munit.Framework")
+  testFrameworks += new TestFramework("munit.Framework"),
+  parallelExecution in Test := sys.env.getOrElse("SBT_PARALLEL_EXECUTION", "true").toBoolean,
+  scalacOptions ++= Seq("-deprecation", "-feature", "-language:higherKinds"),
+  scalacOptions ++= {
+    sys.env.getOrElse("SBT_FATAL_WARNINGS", "true").toBoolean match {
+      case true => Seq("-Xfatal-warnings")
+      case false => Seq.empty
+    }
+  }
 )
 
 val sharedDirs: Seq[Def.SettingsDefinition] = {

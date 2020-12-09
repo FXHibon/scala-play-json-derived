@@ -1,4 +1,4 @@
-package com.fxhibon.json.derived
+package com.fxhibon.json.derived.config
 
 import play.api.libs.json.{JsPath, Reads}
 
@@ -7,12 +7,8 @@ import play.api.libs.json.{JsPath, Reads}
   * it provides a default instance that reads the type in "type" field
   * at same level than others payload fields, without any transformation
   */
-trait TypeNameReads {
-  val reads: Reads[String]
-}
+case class TypeNameReads(reads: Reads[String])
 
 object TypeNameReads {
-  val defaultTypeNameReads: TypeNameReads = new TypeNameReads {
-    override val reads: Reads[String] = (JsPath \ "type").read[String]
-  }
+  val defaultTypeNameReads: TypeNameReads = TypeNameReads((JsPath \ "type").read[String])
 }

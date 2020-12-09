@@ -1,4 +1,4 @@
-package com.fxhibon.json.derived
+package com.fxhibon.json.derived.config
 
 import play.api.libs.json.{JsPath, OWrites}
 
@@ -9,12 +9,8 @@ import play.api.libs.json.{JsPath, OWrites}
   * at same level than others payload fields,
   * without any transformation
   */
-trait TypeNameWrites {
-  val writes: OWrites[String]
-}
+case class TypeNameWrites(writes: OWrites[String])
 
 object TypeNameWrites {
-  val defaultTypeNameWrites: TypeNameWrites = new TypeNameWrites {
-    override val writes: OWrites[String] = (JsPath \ "type").write[String]
-  }
+  val defaultTypeNameWrites: TypeNameWrites = TypeNameWrites((JsPath \ "type").write[String])
 }
