@@ -44,7 +44,7 @@ import com.fxhibon.json.derived.WritesDerivation._
 
 implicit val payloadPath: PayloadPath = PayloadPath(JsPath \ "data")
 implicit val typeNameWrites: TypeNameWrites = TypeNameWrites((JsPath \ "custom_type_name").write[String])
-implicit val typeNameReads: TypeNameReads = TypeNameReads((JsPath \ "custom_typename").read[String])
+implicit val typeNameReads: TypeNameReads = TypeNameReads((JsPath \ "custom_type_name").read[String])
 
 val treeReads: Reads[Tree[Int]] = deriveReads[Tree[Int]]
 val treeWrites: Writes[Tree[Int]] = deriveWrites[Tree[Int]]
