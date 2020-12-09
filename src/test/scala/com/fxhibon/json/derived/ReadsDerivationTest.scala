@@ -1,6 +1,6 @@
 package com.fxhibon.json.derived
 
-import play.api.libs.json.{JsError, JsValue, Json, Reads}
+import play.api.libs.json.{JsError, JsPath, JsValue, Json, Reads}
 import ReadsDerivation._
 
 class ReadsDerivationTest extends munit.FunSuite {
@@ -72,7 +72,18 @@ class ReadsDerivationTest extends munit.FunSuite {
       JsError
         .toJson(failureWithCustomReadsUnknownType.asInstanceOf[JsError])
         .toString(),
-      """{"obj.type":[{"msg":["error.invalid.typename"],"args":[]}]}"""
+      """{"obj":[{"msg":["error.invalid.typename"],"args":[]}]}"""
     )
+  }
+
+  test("derive sealed trait with custom type name") {
+    implicit val typeNameReads: TypeNameReads = new TypeNameReads {
+      override val reads: Typeclass[String] = (JsPath \ "custom_typename").read[String]
+    }
+    val customDerivedReads: Reads[DoubleTree[Int]] = gen
+
+    val result = customDerivedReads.reads(Json.parse("""{"custom_typename": "Leaf", "left": 123, "right": 321}"""))
+
+    assertEquals(result.get, Leaf(left = 123, right = 321))
   }
 }

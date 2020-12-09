@@ -22,16 +22,16 @@ object ReadsDerivation {
       }
     }
 
-  def dispatch[T](ctx: SealedTrait[Reads, T]): Reads[T] =
+  def dispatch[T](
+      ctx: SealedTrait[Reads, T]
+  )(implicit typeNameReads: TypeNameReads = TypeNameReads.defaultTypeNameReads): Reads[T] =
     (value: JsValue) => {
-      val typeNamePath = JsPath \ "type"
-      typeNamePath
-        .read[String]
+      typeNameReads.reads
         .flatMap { typeName =>
           ctx.subtypes.find(_.typeName.short == typeName) match {
             case Some(subtype) => Reads[T](_ => subtype.typeclass.reads(value))
             case None =>
-              Reads[T](_ => JsError(typeNamePath, "error.invalid.typename"))
+              Reads[T](_ => JsError("error.invalid.typename"))
           }
         }
         .reads(value)

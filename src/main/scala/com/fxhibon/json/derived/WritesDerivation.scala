@@ -20,10 +20,12 @@ object WritesDerivation {
         .foldLeft(Json.obj())(_ ++ _)
     }
 
-  def dispatch[T](ctx: SealedTrait[Writes, T]): Writes[T] =
+  def dispatch[T](
+      ctx: SealedTrait[Writes, T]
+  )(implicit typeNameWrites: TypeNameWrites = TypeNameWrites.defaultTypeNameWrites): Writes[T] =
     (t: T) => {
       ctx.dispatch(t) { subtype =>
-        Json.obj("type" -> subtype.typeName.short) ++ subtype.typeclass
+        typeNameWrites.writes.writes(subtype.typeName.short) ++ subtype.typeclass
           .writes(subtype.cast(t))
           .as[JsObject]
       }
