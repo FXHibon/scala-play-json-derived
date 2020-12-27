@@ -2,7 +2,6 @@ package com.fxhibon.json.derived
 
 import com.fxhibon.json.derived.config.{PayloadPath, TypeNameReads}
 import magnolia._
-import play.api.libs.json.JsValue.jsValueToJsLookup
 import play.api.libs.json._
 
 import scala.language.experimental.macros

@@ -1,6 +1,7 @@
 lazy val root = project
   .in(file("."))
   .aggregate(
+    `play-json-derived-play-26`,
     `play-json-derived-play-27`,
     `play-json-derived-play-28`,
     `play-json-derived-play-29`
@@ -19,13 +20,13 @@ val sharedSettings = Seq(
   scalaVersion := scala213,
   crossScalaVersions := Seq(scala212, scala213),
   libraryDependencies += "com.propensive" %% "magnolia" % "0.17.0",
-  libraryDependencies += "org.scalameta"  %% "munit"    % "0.7.19" % Test,
+  libraryDependencies += "org.scalameta"  %% "munit"    % "0.7.20" % Test,
   testFrameworks += new TestFramework("munit.Framework"),
-  parallelExecution in Test := sys.env.getOrElse("SBT_PARALLEL_EXECUTION", "true").toBoolean,
+  parallelExecution in Test := sys.env.getOrElse(key = "SBT_PARALLEL_EXECUTION", default = "true").toBoolean,
   scalacOptions ++= Seq("-deprecation", "-feature", "-language:higherKinds"),
   scalacOptions ++= {
-    sys.env.getOrElse("SBT_FATAL_WARNINGS", "true").toBoolean match {
-      case true => Seq("-Xfatal-warnings")
+    sys.env.getOrElse(key = "SBT_FATAL_WARNINGS", default = "true").toBoolean match {
+      case true => Seq("-Xfatal-warnings", "-Ywarn-unused:imports")
       case false => Seq.empty
     }
   }
@@ -40,6 +41,15 @@ val sharedDirs: Seq[Def.SettingsDefinition] = {
     Test / unmanagedSourceDirectories += sharedSrcDirectory.value / "src" / "test" / "scala"
   )
 }
+
+lazy val `play-json-derived-play-26` = project
+  .settings(sharedDirs: _*)
+  .settings(sharedSettings)
+  .settings(
+    libraryDependencies += "com.typesafe.play" %% "play-json" % "2.6.14",
+    scalaVersion := scala212,
+    crossScalaVersions := Seq(scala212)
+  )
 
 lazy val `play-json-derived-play-27` = project
   .settings(sharedDirs: _*)
