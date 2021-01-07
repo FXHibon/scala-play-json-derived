@@ -69,5 +69,5 @@ lazy val `play-json-derived-play-29` = project
   .settings(sharedDirs: _*)
   .settings(sharedSettings)
   .settings(
-    libraryDependencies += "com.typesafe.play" %% "play-json" % "2.9.1"
+    libraryDependencies += "com.typesafe.play" %% "play-json" % "2.9.2"
   )
