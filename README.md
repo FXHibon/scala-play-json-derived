@@ -22,8 +22,8 @@ one can derive for zero cost an instance of Reads or Writes for **Tree[Int]**, a
 
 ```scala
 import play.api.libs.json._
-import com.fxhibon.json.derived.ReadsDerivation._
-import com.fxhibon.json.derived.WritesDerivation._
+import com.github.fxhibon.json.derived.ReadsDerivation._
+import com.github.fxhibon.json.derived.WritesDerivation._
 
 val treeReads: Reads[Tree[Int]] = deriveReads[Tree[Int]]
 val treeWrites: Writes[Tree[Int]] = deriveWrites[Tree[Int]]
@@ -39,8 +39,8 @@ The default behaviors to read/write type name and payload can be overloaded by p
 
 ```scala
 import play.api.libs.json._
-import com.fxhibon.json.derived.ReadsDerivation._
-import com.fxhibon.json.derived.WritesDerivation._
+import com.github.fxhibon.json.derived.ReadsDerivation._
+import com.github.fxhibon.json.derived.WritesDerivation._
 
 implicit val payloadPath: PayloadPath = PayloadPath(JsPath \ "data")
 implicit val typeNameWrites: TypeNameWrites = TypeNameWrites((JsPath \ "custom_type_name").write[String])

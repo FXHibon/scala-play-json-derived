@@ -1,7 +1,7 @@
-package com.fxhibon.json.derived
+package com.github.fxhibon.json.derived
 
 import WritesDerivation._
-import com.fxhibon.json.derived.config.{PayloadPath, TypeNameWrites}
+import com.github.fxhibon.json.derived.config.{PayloadPath, TypeNameWrites}
 import play.api.libs.json.{JsPath, Json, Writes}
 
 class WritesDerivationTest extends munit.FunSuite {

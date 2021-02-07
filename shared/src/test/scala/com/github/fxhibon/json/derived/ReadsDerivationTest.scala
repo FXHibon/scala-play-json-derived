@@ -1,8 +1,8 @@
-package com.fxhibon.json.derived
+package com.github.fxhibon.json.derived
 
 import play.api.libs.json.{JsError, JsPath, JsValue, Json, Reads}
 import ReadsDerivation._
-import com.fxhibon.json.derived.config.{PayloadPath, TypeNameReads}
+import com.github.fxhibon.json.derived.config.{PayloadPath, TypeNameReads}
 
 class ReadsDerivationTest extends munit.FunSuite {
 
