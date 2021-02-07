@@ -1,5 +1,8 @@
 lazy val root = project
   .in(file("."))
+  .settings(
+    publish / skip := true
+  )
   .aggregate(
     `play-json-derived-play-26`,
     `play-json-derived-play-27`,
@@ -10,13 +13,7 @@ lazy val root = project
 val scala212 = "2.12.13"
 val scala213 = "2.13.5"
 val sharedSettings = Seq(
-  organization := "com.fxhibon",
-  version := {
-    git.gitCurrentTags.value.lastOption match {
-      case Some(tag) => tag
-      case None => "%s-SNAPSHOT".format(git.gitCurrentBranch.value)
-    }
-  },
+  organization := "com.github.fxhibon",
   scalaVersion := scala213,
   crossScalaVersions := Seq(scala212, scala213),
   libraryDependencies += "com.propensive" %% "magnolia" % "0.17.0",
@@ -46,6 +43,7 @@ lazy val `play-json-derived-play-26` = project
   .settings(sharedDirs: _*)
   .settings(sharedSettings)
   .settings(
+    name := "play-json-derived-play-26",
     libraryDependencies += "com.typesafe.play" %% "play-json" % "2.6.14",
     scalaVersion := scala212,
     crossScalaVersions := Seq(scala212)
@@ -55,6 +53,7 @@ lazy val `play-json-derived-play-27` = project
   .settings(sharedDirs: _*)
   .settings(sharedSettings)
   .settings(
+    name := "play-json-derived-play-27",
     libraryDependencies += "com.typesafe.play" %% "play-json" % "2.7.4"
   )
 
@@ -62,6 +61,7 @@ lazy val `play-json-derived-play-28` = project
   .settings(sharedDirs: _*)
   .settings(sharedSettings)
   .settings(
+    name := "play-json-derived-play-28",
     libraryDependencies += "com.typesafe.play" %% "play-json" % "2.8.1"
   )
 
@@ -69,5 +69,6 @@ lazy val `play-json-derived-play-29` = project
   .settings(sharedDirs: _*)
   .settings(sharedSettings)
   .settings(
+    name := "play-json-derived-play-29",
     libraryDependencies += "com.typesafe.play" %% "play-json" % "2.9.2"
   )
