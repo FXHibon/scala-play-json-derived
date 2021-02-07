@@ -1,4 +1,4 @@
-package com.fxhibon.json.derived.config
+package com.github.fxhibon.json.derived.config
 
 import play.api.libs.json.{JsPath, Reads}
 

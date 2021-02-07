@@ -1,4 +1,4 @@
-package com.fxhibon.json.derived
+package com.github.fxhibon.json.derived
 
 sealed trait DoubleTree[T]
 

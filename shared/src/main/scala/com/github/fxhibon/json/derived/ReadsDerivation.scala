@@ -1,6 +1,6 @@
-package com.fxhibon.json.derived
+package com.github.fxhibon.json.derived
 
-import com.fxhibon.json.derived.config.{PayloadPath, TypeNameReads}
+import com.github.fxhibon.json.derived.config.{PayloadPath, TypeNameReads}
 import magnolia._
 import play.api.libs.json._
 
