@@ -8,7 +8,7 @@ lazy val root = project
   )
 
 val scala212 = "2.12.13"
-val scala213 = "2.13.4"
+val scala213 = "2.13.5"
 val sharedSettings = Seq(
   organization := "com.fxhibon",
   version := {
@@ -20,9 +20,9 @@ val sharedSettings = Seq(
   scalaVersion := scala213,
   crossScalaVersions := Seq(scala212, scala213),
   libraryDependencies += "com.propensive" %% "magnolia" % "0.17.0",
-  libraryDependencies += "org.scalameta"  %% "munit"    % "0.7.21" % Test,
+  libraryDependencies += "org.scalameta"  %% "munit"    % "0.7.22" % Test,
   testFrameworks += new TestFramework("munit.Framework"),
-  parallelExecution in Test := sys.env.getOrElse(key = "SBT_PARALLEL_EXECUTION", default = "true").toBoolean,
+  Test / parallelExecution := sys.env.getOrElse(key = "SBT_PARALLEL_EXECUTION", default = "true").toBoolean,
   scalacOptions ++= Seq("-deprecation", "-feature", "-language:higherKinds"),
   scalacOptions ++= {
     sys.env.getOrElse(key = "SBT_FATAL_WARNINGS", default = "true").toBoolean match {
