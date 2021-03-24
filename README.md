@@ -1,12 +1,19 @@
 [![Scala CI](https://github.com/FXHibon/scala-play-json-derived/actions/workflows/scala.yml/badge.svg)](https://github.com/FXHibon/scala-play-json-derived/actions/workflows/scala.yml)
+[![Release](https://badgen.net/github/release/FXHibon/scala-play-json-derived)](https://badgen.net/github/release/FXHibon/scala-play-json-derived)
 
 ## play-json derivation
 
 Provide derivation of [Reads](https://github.com/playframework/play-json/blob/master/play-json/shared/src/main/scala/play/api/libs/json/Reads.scala#L36) and [Writes](https://github.com/playframework/play-json/blob/master/play-json/shared/src/main/scala/play/api/libs/json/Writes.scala#L23) of [play-json](https://github.com/playframework/play-json) types, using [magnolia](https://github.com/propensive/magnolia)
 
-### How to
+### Install
 
-- for a complete examples, see the [tests](./src/test/scala/com/github/fxhibon/json/derived)
+```scala
+  libraryDependencies += "com.github.fxhibon" %% "play-json-derived-play-2X" % "<latest-release>" 
+```
+
+### How to use
+
+- for a complete examples, see the [tests](./shared/src/test/scala/com/github/fxhibon/json/derived)
 
 In a few words, given:
 
@@ -35,7 +42,7 @@ val json = treeWrites.writes(leaf)
 // {"type": "Leaf", "value": 123}
 ```
 
-The default behaviors to read/write type name and payload can be overloaded by providing implicit instances for respectively [TypeNameReads](./shared/src/main/scala/com/github/fxhibon/json/derived/config/TypeNameReads.scala), [TypeNameWrites](./shared/src/main/scala/com/github/fxhibon/json/derived/config/TypeNameWrites.scala) and [PayloadPath](./shared/src/main/scala/com/fxhibon/json/derived/config/PayloadPath.scala)
+The default behaviors to read/write type name and payload can be overloaded by providing implicit instances for respectively [TypeNameReads](./shared/src/main/scala/com/github/fxhibon/json/derived/config/TypeNameReads.scala), [TypeNameWrites](./shared/src/main/scala/com/github/fxhibon/json/derived/config/TypeNameWrites.scala) and [PayloadPath](./shared/src/main/scala/com/github/fxhibon/json/derived/config/PayloadPath.scala)
 
 ```scala
 import play.api.libs.json._
