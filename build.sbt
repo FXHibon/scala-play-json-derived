@@ -10,17 +10,17 @@ lazy val root = project
     `play-json-derived-play-29`
   )
 
-val scala212 = "2.12.13"
-val scala213 = "2.13.5"
+val scala212 = "2.12.15"
+val scala213 = "2.13.7"
 val sharedSettings = Seq(
   organization := "com.github.fxhibon",
   scalaVersion := scala213,
   crossScalaVersions := Seq(scala212, scala213),
-  libraryDependencies += "com.propensive" %% "magnolia" % "0.17.0",
-  libraryDependencies += "org.scalameta"  %% "munit"    % "0.7.23" % Test,
+  libraryDependencies += "com.softwaremill.magnolia1_2" %% "magnolia" % "1.0.0",
+  libraryDependencies += "org.scalameta"                %% "munit"    % "0.7.29" % Test,
   testFrameworks += new TestFramework("munit.Framework"),
   Test / parallelExecution := sys.env.getOrElse(key = "SBT_PARALLEL_EXECUTION", default = "true").toBoolean,
-  scalacOptions ++= Seq("-deprecation", "-feature", "-language:higherKinds"),
+  scalacOptions += "-Ywarn-macros:after",
   scalacOptions ++= {
     sys.env.getOrElse(key = "SBT_FATAL_WARNINGS", default = "true").toBoolean match {
       case true => Seq("-Xfatal-warnings", "-Ywarn-unused:imports")
@@ -62,7 +62,7 @@ lazy val `play-json-derived-play-28` = project
   .settings(sharedSettings)
   .settings(
     name := "play-json-derived-play-28",
-    libraryDependencies += "com.typesafe.play" %% "play-json" % "2.8.1"
+    libraryDependencies += "com.typesafe.play" %% "play-json" % "2.8.2"
   )
 
 lazy val `play-json-derived-play-29` = project
