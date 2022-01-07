@@ -1,16 +1,14 @@
 package com.github.fxhibon.json.derived
 
 import com.github.fxhibon.json.derived.config.{PayloadPath, TypeNameWrites}
-import magnolia._
+import magnolia1._
 import play.api.libs.json._
-
-import scala.language.experimental.macros
 
 object WritesDerivation {
 
   type Typeclass[T] = Writes[T]
 
-  def combine[T](ctx: CaseClass[Writes, T]): Writes[T] =
+  def join[T](ctx: CaseClass[Writes, T]): Writes[T] =
     (t: T) => {
       ctx.parameters
         .map { param =>
@@ -21,14 +19,14 @@ object WritesDerivation {
         .foldLeft(Json.obj())(_ ++ _)
     }
 
-  def dispatch[T](
+  def split[T](
       ctx: SealedTrait[Writes, T]
   )(implicit
       typeNameWrites: TypeNameWrites = TypeNameWrites.defaultTypeNameWrites,
       payloadPath: PayloadPath = PayloadPath.defaultPayloadPath
   ): Writes[T] =
     (t: T) => {
-      ctx.dispatch(t) { subtype =>
+      ctx.split(t) { subtype =>
         typeNameWrites.writes.writes(subtype.typeName.short) ++ payloadPath.path
           .write(subtype.typeclass)
           .writes(subtype.cast(t))

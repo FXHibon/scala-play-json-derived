@@ -1,16 +1,14 @@
 package com.github.fxhibon.json.derived
 
 import com.github.fxhibon.json.derived.config.{PayloadPath, TypeNameReads}
-import magnolia._
+import magnolia1._
 import play.api.libs.json._
-
-import scala.language.experimental.macros
 
 object ReadsDerivation {
 
   type Typeclass[T] = Reads[T]
 
-  def combine[T](ctx: CaseClass[Reads, T]): Reads[T] =
+  def join[T](ctx: CaseClass[Reads, T]): Reads[T] =
     (value: JsValue) => {
       ctx.constructEither { param =>
         (JsPath \ param.label).read(param.typeclass).reads(value) match {
@@ -23,7 +21,7 @@ object ReadsDerivation {
       }
     }
 
-  def dispatch[T](
+  def split[T](
       ctx: SealedTrait[Reads, T]
   )(implicit
       typeNameReads: TypeNameReads = TypeNameReads.defaultTypeNameReads,
